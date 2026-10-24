@@ -1,4 +1,5 @@
-﻿$python = Join-Path $PSScriptRoot '.venv\scripts\python.exe'
+﻿# YouTube channel batch download
+$python = Join-Path $PSScriptRoot '.venv\scripts\python.exe'
 $script = Join-Path $PSScriptRoot 'download_channel.py'
 $cookies = Join-Path $PSScriptRoot 'cookies.txt'
 
@@ -16,25 +17,31 @@ function Get-DownloadCountFromOutput {
 function Invoke-ChannelDownload {
     param(
         [string]$Channel,
-        [string]$StartEnd
+        [string]$StartEnd,
+        [switch]$ContinueOnError
     )
     $output = @(
         & $python $script $Channel --startend $StartEnd --cookies $cookies 2>&1
     )
     $output | ForEach-Object { Write-Host $_ }
+    $count = Get-DownloadCountFromOutput $output
     if ($LASTEXITCODE -ne 0) {
+        if ($ContinueOnError) {
+            return $count
+        }
         exit $LASTEXITCODE
     }
-    return Get-DownloadCountFromOutput $output
+    return $count
 }
 
 $phase0Total = 0
-$phase0Total += Invoke-ChannelDownload '@boherteck2585' '0:0'
-$phase0Total += Invoke-ChannelDownload '@misterzafar' '0:0'
-$phase0Total += Invoke-ChannelDownload '@AnnuMusicCentre' '0:0'
-$phase0Total += Invoke-ChannelDownload '@UjanNews-Yt' '0:0'
+$phase0Total += Invoke-ChannelDownload '@boherteck2585' '0:0' -ContinueOnError
+$phase0Total += Invoke-ChannelDownload '@misterzafar' '0:0' -ContinueOnError
+$phase0Total += Invoke-ChannelDownload '@AnnuMusicCentre' '0:0' -ContinueOnError
+$phase0Total += Invoke-ChannelDownload '@UjanNews-Yt' '0:0' -ContinueOnError
 
 if ($phase0Total -eq 0) {
+    Write-Host ''
     Write-Host '最初の4件でダウンロードが1度も発生しなかったため、5件目以降をスキップします。'
     exit 0
 }
