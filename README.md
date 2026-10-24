@@ -14,20 +14,22 @@ pip install -r requirements.txt
 
 ## 使い方
 
+**PowerShell** では `@` が特別扱いになるため、ハンドルは **引用符で囲む**（例: `'@ShomoyUpdatenews'`）。URL 指定ならそのままで大丈夫です。
+
 ```bash
 # 最新 0〜2 件目（最新 3 本）をダウンロード
-python download_channel.py @UjanNews-Yt --startend 0:2
+python download_channel.py '@UjanNews-Yt' --startend 0:2
 # ダウンロードできない場合は、クッキーをchromeからダウンロードして以下のコマンド
-python download_channel.py @UjanNews-Yt --startend 0:2 --cookies cookies.txt
+python download_channel.py '@UjanNews-Yt' --startend 0:2 --cookies cookies.txt
 
 # チャンネル URL を指定
 python download_channel.py https://www.youtube.com/@YouTube --startend 0:0
 
 # 保存先を変更
-python download_channel.py @YouTube --startend 0:2 -o my_videos
+python download_channel.py '@YouTube' --startend 0:2 -o my_videos
 
 # 範囲指定なし → チャンネルの全通常動画
-python download_channel.py @YouTube
+python download_channel.py '@YouTube'
 
 
 # ファイルの内容を無くして、ファイル名のみ残す
@@ -36,6 +38,14 @@ python truncate_nonempty_mp4.py "downloads/Ujan News"
 
 # 本当に空にする
 python truncate_nonempty_mp4.py "downloads/Ujan News" --execute
+
+# Dailymotion（単体動画）
+python download_dailymotion.py https://www.dailymotion.com/video/x5n7kjw
+python download_dailymotion.py x5n7kjw -f hls-480
+
+# Dailymotion（チャンネル・YouTube と同じ --startend）
+python download_dailymotion.py nogizaka-channel --startend 0:0
+python download_dailymotion.py https://www.dailymotion.com/nogizaka-channel --startend 0:2
 
 
 ```
@@ -54,3 +64,4 @@ python truncate_nonempty_mp4.py "downloads/Ujan News" --execute
 
 - `/videos` タブ相当を対象にするため、Shorts / ライブは含まれません。
 - ファイルは `downloads/<チャンネル名>/<投稿日>_<タイトル> [<ID>].mp4` に保存されます。
+- Dailymotion は `download_dailymotion.py` を使います。`curl_cffi` が必要です（`requirements.txt` に記載）。
