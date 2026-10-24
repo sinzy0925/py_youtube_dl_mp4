@@ -139,8 +139,18 @@ def download(
         print("既存ファイル: 上書きする")
     print("-" * 60)
 
+    downloaded_count = 0
+
+    def _progress_hook(data: dict) -> None:
+        nonlocal downloaded_count
+        if data.get("status") == "finished" and data.get("filename"):
+            downloaded_count += 1
+
+    opts["progress_hooks"] = [_progress_hook]
+
     with yt_dlp.YoutubeDL(opts) as ydl:
         code = ydl.download([url])
+    print(f"DOWNLOAD_COUNT: {downloaded_count}")
     return 0 if code == 0 else 1
 
 
