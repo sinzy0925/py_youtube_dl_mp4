@@ -1,3 +1,5 @@
+.venv\scripts\python.exe truncate_nonempty_mp4.py "downloads/faitato sp" --execute
+
 .venv\scripts\python.exe truncate_nonempty_mp4.py "downloads/Annu Music Centre" --execute
 
 .venv\scripts\python.exe truncate_nonempty_mp4.py "downloads/Boherteck#" --execute
